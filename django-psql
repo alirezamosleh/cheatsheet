@@ -1,0 +1,11 @@
+#backup and restore psql docker data
+#-------------------------------------
+
+docker exec -it <dockerName> pg_dumpall -U <psql user> > hodaBack.sql
+docker exec -it <dockerName> pg_dump -U <psql user> <psql database> > hodaBack.sql
+
+docker exec <dockerName> pg_restore -U <psql user> -d <psql database> -f ./hoda/hodaBack.sql
+docker exec <dockerName> psql -U <psql user> < ./hoda/hodaBack.sql
+
+
+#-----------------------------------------
