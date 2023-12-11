@@ -1,0 +1,7 @@
+>>> q = Entry.objects.filter(headline__startswith="What")
+>>> q = q.filter(pub_date__lte=datetime.date.today())
+>>> q = q.exclude(body_text__icontains="food")
+>>> print(q)
+
+Though this looks like three database hits, in fact it hits the database only once, at the last line (print(q)).
+In general, the results of a QuerySet aren’t fetched from the database until you “ask” for them. When you do, the QuerySet is evaluated by accessing the database.
