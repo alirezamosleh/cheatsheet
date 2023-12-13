@@ -1,3 +1,7 @@
+----------------------
+lazy query
+--------------------
+
 >>> q = Entry.objects.filter(headline__startswith="What")
 >>> q = q.filter(pub_date__lte=datetime.date.today())
 >>> q = q.exclude(body_text__icontains="food")
