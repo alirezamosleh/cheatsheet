@@ -6,6 +6,6 @@ docker exec -it <dockerName> pg_dump -U <psql user> <psql database> > hodaBack.s
 
 docker exec <dockerName> pg_restore -U <psql user> -d <psql database> -f ./hoda/hodaBack.sql
 docker exec <dockerName> psql -U <psql user> < ./hoda/hodaBack.sql
-
+docker exec -i c5a3d06e9b20 psql -U postgres -f /hodaBack.sql
 
 #-----------------------------------------
