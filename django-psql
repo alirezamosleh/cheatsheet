@@ -59,6 +59,7 @@ for item in os.listdir(current_dir):
 I belive the best way to keep migrations file after clone from github is to copy new with old
 
 # copy migrations with we have dirNew and dirOld
+--------------------------
 
 import os
 import shutil
