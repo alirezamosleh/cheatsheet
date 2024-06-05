@@ -9,3 +9,79 @@ docker exec <dockerName> psql -U <psql user> < ./hoda/hodaBack.sql
 docker exec -i c5a3d06e9b20 psql -U postgres -f /hodaBack.sql
 
 #-----------------------------------------
+# manage server (migrations)
+----------------------------
+
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+find . -path "*/migrations/*.pyc"  -delete
+
+#add migrations dir
+-------------------
+import os
+
+def ensure_migrations(app_name):
+    migrations_dir = os.path.join(app_name, 'migrations')
+    init_file = os.path.join(migrations_dir, '__init__.py')
+
+    if not os.path.exists(migrations_dir):
+        os.makedirs(migrations_dir)
+        print(f"Created directory: {migrations_dir}")
+
+    if not os.path.exists(init_file):
+        with open(init_file, 'w') as f:
+            f.write('')
+        print(f"Created file: {init_file}")
+
+current_dir = os.getcwd()
+for item in os.listdir(current_dir):
+    if os.path.isdir(item) and os.path.exists(os.path.join(item, 'models.py')):
+        ensure_migrations(item)
+
+------------------------------------------
+# remove all migrations directory
+------------------------------------------
+import os
+import shutil
+
+def remove_migrations(app_name):
+    migrations_dir = os.path.join(app_name, 'migrations')
+
+    if os.path.exists(migrations_dir) and os.path.isdir(migrations_dir):
+        shutil.rmtree(migrations_dir)
+        print(f"Removed directory: {migrations_dir}")
+
+current_dir = os.getcwd()
+for item in os.listdir(current_dir):
+    if os.path.isdir(item) and os.path.exists(os.path.join(item, 'models.py')):
+        remove_migrations(item)
+#---------------------------------------------------------------------------
+
+I belive the best way to keep migrations file after clone from github is to copy new with old
+
+# copy migrations with we have dirNew and dirOld
+
+import os
+import shutil
+
+def copy_migrations(src, dest):
+    for root, dirs, files in os.walk(src):
+        if 'migrations' in dirs:
+            migrations_path = os.path.join(root, 'migrations')
+            relative_path = os.path.relpath(migrations_path, src)
+            dest_path = os.path.join(dest, relative_path)
+
+            # Create destination directory if it doesn't exist
+            os.makedirs(dest_path, exist_ok=True)
+            
+            for item in os.listdir(migrations_path):
+                s = os.path.join(migrations_path, item)
+                d = os.path.join(dest_path, item)
+                if os.path.isdir(s):
+                    shutil.copytree(s, d, dirs_exist_ok=True)
+                else:
+                    shutil.copy2(s, d)
+
+src_directory = 'path/to/dirOld'
+dest_directory = 'path/to/dirNew'
+
+copy_migrations(src_directory, dest_directory)
