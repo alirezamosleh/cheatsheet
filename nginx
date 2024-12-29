@@ -1,0 +1,2 @@
+docker exec 8c3752b573ab nginx -s reload
+docker exec 8c3752b573ab rm -rf /var/cache/nginx/*
